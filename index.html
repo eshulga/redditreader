@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Reddit Reader</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header></header>
+    <main>
+        <div class="left">
+            <h2>Search reddit by query</h2>
+            <input type="text" name="search_reddit" id="search_reddit">
+            <div id="list__wrapper">Try to type something :)</div>
+        </div>
+        <div class="right">
+            <h2>Posts list</h2>
+            <div id="posts__wrapper">
+
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+
+    <script type="text\template" id="list_reddits">
+        <ul class="reddits-list">
+            <%
+                items.map(item=>{
+                    %>
+                        <li><a class="reddit-link" href="#" data-name="<%- item.name %>" data-id="<%- item.id %>"><%- item.name %></li>
+                    <%            
+                })
+            %>
+        </ul>
+    </script>
+    <script type="text\template" id="list_posts">
+            <ul class="posts-list">
+                <%
+                    items.map((item,i)=>{
+                        
+                        var itemClass = (i+1)%2 === 0 ? 'even' : 'odd';
+                        var num = currentItemCount > 10 ? (currentItemCount-10)+i+1 : i+1    
+
+                        %>
+                            <li class="<%- itemClass %>">
+                                <span><%- num %>.</span>
+
+                            <% if(item.data.thumbnail !== 'default' && item.data.thumbnail !== 'self') { %>    
+
+                                <img height="<%- item.data.thumbnail_height %>"
+                                     width="<%- item.data.thumbnail_width %>"
+                                     class="post-thumbnail"
+                                     src="<%- item.data.thumbnail %>"/>
+                            <% } %>        
+
+                                <a class="post-link"
+                                   href="<%- item.data.url %>"
+                                   target="_blank"
+                                   data-title="<%- item.data.title %>"
+                                   data-id="<%- item.data.id %>" >
+                                <%- item.data.title %></a>
+                            </li>
+                        <%            
+                    })
+                %>
+            </ul>
+            <div id="pagination">
+                <% if(currentItemCount !== itemCount ) {%>
+                <button class="pagination__control" 
+                        value="prev" 
+                        data-direct="prev" 
+                        data-prevId="<%- items[0].data.name %>"
+                        onclick="prevPosts(this)">prev</button>
+
+                <% } %>
+                <button class="pagination__control" 
+                        value="next" 
+                        data-direct="next" 
+                        data-nextId="<%- items[items.length-1].data.name %>"
+                        onclick="nextPosts(this)">next</button>
+            </div>
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"></script>
+    <script src="src/main.js"></script>
+</body>
+</html>
